@@ -162,3 +162,23 @@ For every new file, ask these questions in order:
 Before the refactor, all 30 files lived directly under `src/`, so a contributor had to scan unrelated auth, catalog, cart, order, and shared UI files to locate a workflow. The flat layout also made relative imports ambiguous because similarly named responsibilities were peers in the same directory.
 
 After the refactor, ownership is visible from the path. Cart checkout logic can be found by opening `src/features/cart/` and locating `CheckoutModal.jsx` alongside `CartSummary.jsx`, `CartItem.jsx`, `cartService.js`, and `useCart.js`. Shared UI and infrastructure are clearly separated, making the codebase easier to onboard, navigate, and extend.
+
+## Implementation Evidence
+
+The plan was committed before the implementation moves. The refactor was then executed in feature groups: shared code and authentication, products, cart, and orders. Each group was committed separately so the move history can be reviewed without a single opaque bulk change:
+
+- `f17e122` — plan the feature-based source structure in this document.
+- `21a0cb1` — move shared code and the auth feature, then update imports.
+- `9ad5158` — move the products feature to `src/features/products/`.
+- `bf1ec86` — move the cart and checkout feature to `src/features/cart/`.
+- `6b6e584` — move the orders feature and update application imports.
+
+The current source tree is the as-built tree above, not only a proposed design. The repository also includes a reproducible `assignment-starter` baseline so the pull request can display the source moves and import changes directly in its diff.
+
+## Verification Checklist
+
+- `src/` contains 30 source files: all original feature, shared, utility, service, and application files are accounted for.
+- Feature imports point to sibling modules within the owning feature or to the correct shared folder.
+- Shared imports use `src/components/`, `src/hooks/`, `src/utils/`, and `src/services/` rather than the old flat paths.
+- `npm run build` completes successfully with Vite after the refactor.
+- The PR's source diff shows the original flat paths, the new feature-based paths, and the updated imports.
